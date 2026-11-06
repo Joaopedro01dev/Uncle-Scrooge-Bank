@@ -1,9 +1,9 @@
-public class Cliente{
+public abstract class Cliente{
     private final int numero;
     private String nome;
     private static int codigo = 1000;
 
-    public Cliente(String nome){
+    protected Cliente(String nome){
         this.numero = codigo++;
         this.nome = nome;
     }

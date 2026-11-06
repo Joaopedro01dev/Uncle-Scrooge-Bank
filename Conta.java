@@ -1,4 +1,4 @@
-public class Conta{
+public abstract class Conta{
     private final int numero;
     private double saldo;
     private int pix;
@@ -6,7 +6,7 @@ public class Conta{
     private final Agencia agencia;
     private static int codigo = 1000;
 
-    public Conta(double saldo, int pix, Cliente cliente, Agencia agencia){
+    protected Conta(double saldo, int pix, Cliente cliente, Agencia agencia){
         if(!Double.isFinite(saldo) || saldo < 0){
             throw new IllegalArgumentException("O saldo inicial deve ser finito e maior ou igual a zero.");
         }

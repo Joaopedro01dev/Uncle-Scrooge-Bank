@@ -48,7 +48,24 @@ public class Main{
             }
         }
 
-        Cliente novoCliente = new Cliente(nome);
+        System.out.println("Tipo de cliente: 1. Pessoa Física | 2. Pessoa Jurídica");
+        System.out.print("Escolha uma opção: ");
+        int tipoCliente = input.nextInt();
+        input.nextLine();
+
+        Cliente novoCliente;
+        if(tipoCliente == 1){
+            System.out.print("Digite o CPF: ");
+            String cpf = input.nextLine();
+            novoCliente = new PessoaFisica(nome, cpf);
+        } else if(tipoCliente == 2){
+            System.out.print("Digite o CNPJ: ");
+            String cnpj = input.nextLine();
+            novoCliente = new PessoaJuridica(nome, cnpj);
+        } else{
+            System.out.println("Tipo de cliente inválido. Criação cancelada.");
+            return;
+        }
         Agencia minhaAgencia = new Agencia(1984);
 
         System.out.println("--- Criação da Conta ---");
@@ -58,7 +75,7 @@ public class Main{
             saldo = input.nextDouble();
             input.nextLine();
 
-            if(saldo < 0){
+            if(!Double.isFinite(saldo) || saldo < 0){
                 System.out.println("Digite um saldo válido (positivo ou zero)!");
             }
             else{
@@ -70,7 +87,20 @@ public class Main{
         pix = input.nextInt();
         input.nextLine();
 
-        Conta novaConta = new Conta(saldo, pix, novoCliente, minhaAgencia);
+        System.out.println("Tipo de conta: 1. Conta Corrente | 2. Conta Poupança");
+        System.out.print("Escolha uma opção: ");
+        int tipoConta = input.nextInt();
+        input.nextLine();
+
+        Conta novaConta;
+        if(tipoConta == 1){
+            novaConta = new ContaCorrente(saldo, pix, novoCliente, minhaAgencia);
+        } else if(tipoConta == 2){
+            novaConta = new ContaPoupanca(saldo, pix, novoCliente, minhaAgencia);
+        } else {
+            System.out.println("Tipo de conta inválido. Criação cancelada.");
+            return;
+        }
 
         listaDeClientes.add(novoCliente);
         listaDeContas.add(novaConta);
@@ -86,7 +116,9 @@ public class Main{
 
         System.out.println("\n--- Contas Disponíveis ---");
         for(int i = 0; i < listaDeContas.size(); i++){
-            System.out.println("[" + i + "] Conta Número: " + listaDeContas.get(i).getNumero());
+            Conta conta = listaDeContas.get(i);
+            String tipo = conta instanceof ContaCorrente ? "Conta Corrente" : "Conta Poupança";
+            System.out.println("[" + i + "] " + tipo + " Número: " + conta.getNumero());
         }
 
         System.out.print("Digite o índice da conta que deseja acessar: ");
@@ -110,7 +142,8 @@ public class Main{
 
         for(int i = 0; i < listaDeClientes.size(); i++){
            Cliente cliente = listaDeClientes.get(i);
-           System.out.println("[" + i + "] Nome: " + cliente.getNome() + " | Número: " + cliente.getNumero());
+           System.out.println("[" + i + "]");
+           cliente.exibirDados();
         }
         
         System.out.println("\n");
