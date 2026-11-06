@@ -6,13 +6,13 @@ public abstract class Conta{
     private final Agencia agencia;
     private static int codigo = 1000;
 
-    protected Conta(double saldo, int pix, Cliente cliente, Agencia agencia){
+    protected Conta(int pix, Cliente cliente, Agencia agencia){
         if(!Double.isFinite(saldo) || saldo < 0){
             throw new IllegalArgumentException("O saldo inicial deve ser finito e maior ou igual a zero.");
         }
 
         this.numero = codigo++;
-        this.saldo = saldo;
+        this.saldo = 500;
         this.pix = pix;
         this.cliente = cliente;
         this.agencia = agencia;
@@ -60,7 +60,7 @@ public abstract class Conta{
     }
 
     public void consultarSaldo(){
-        System.out.println("Saldo Atual: " + saldo);
+        System.out.printf("Saldo atual: %.2f%n", saldo);
     }
 
     public boolean recarga(double valor){

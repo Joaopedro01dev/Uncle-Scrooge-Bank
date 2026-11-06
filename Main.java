@@ -6,7 +6,7 @@ public class Main{
     private static final ArrayList<Conta> listaDeContas = new ArrayList<>();
     private static final ArrayList<Cliente> listaDeClientes = new ArrayList<>();
 
-    private static void menu(){
+    private static void menu(Conta contaAtual){
         System.out.println("\n===============================");
         System.out.println("       Banco Tio Patinhas      ");
         System.out.println("===============================");
@@ -17,7 +17,19 @@ public class Main{
         System.out.println("5. Fazer transferência");
         System.out.println("6. Trocar de Conta / Voltar ao Início");
         System.out.println("7. Sair do Sistema");
+        if(contaAtual instanceof ContaPoupanca){
+            System.out.println("8. Iniciar investimentos");
+            System.out.println("9. Parar investimentos");
+        }
         System.out.print("Escolha uma opção: ");
+    }
+
+    private static void pararTodosInvestimentos(){
+        for(Conta conta : listaDeContas){
+            if(conta instanceof ContaPoupanca){
+                ((ContaPoupanca) conta).pararInvestimentos();
+            }
+        }
     }
 
     private static void startMenu(){
@@ -34,7 +46,6 @@ public class Main{
     private static void criarNovaConta(){
         int pix;
         String nome;
-        double saldo;
 
         while(true){
             System.out.print("Digite o nome do Cliente: ");
@@ -48,7 +59,9 @@ public class Main{
             }
         }
 
-        System.out.println("Tipo de cliente: 1. Pessoa Física | 2. Pessoa Jurídica");
+        System.out.println("Tipo de cliente:");
+        System.out.println("1. Pessoa Física");
+        System.out.println("2. Pessoa Jurídica");
         System.out.print("Escolha uma opção: ");
         int tipoCliente = input.nextInt();
         input.nextLine();
@@ -69,20 +82,6 @@ public class Main{
         Agencia minhaAgencia = new Agencia(1984);
 
         System.out.println("--- Criação da Conta ---");
-
-        while(true){
-            System.out.print("Digite o saldo inicial da conta: ");
-            saldo = input.nextDouble();
-            input.nextLine();
-
-            if(!Double.isFinite(saldo) || saldo < 0){
-                System.out.println("Digite um saldo válido (positivo ou zero)!");
-            }
-            else{
-                break;
-            }
-        }
-
         System.out.print("Digite a chave pix (somente números): ");
         pix = input.nextInt();
         input.nextLine();
@@ -94,9 +93,9 @@ public class Main{
 
         Conta novaConta;
         if(tipoConta == 1){
-            novaConta = new ContaCorrente(saldo, pix, novoCliente, minhaAgencia);
+            novaConta = new ContaCorrente(pix, novoCliente, minhaAgencia);
         } else if(tipoConta == 2){
-            novaConta = new ContaPoupanca(saldo, pix, novoCliente, minhaAgencia);
+            novaConta = new ContaPoupanca(pix, novoCliente, minhaAgencia);
         } else {
             System.out.println("Tipo de conta inválido. Criação cancelada.");
             return;
@@ -169,7 +168,7 @@ public class Main{
                         boolean noMenuOperacional = true;
 
                         while(noMenuOperacional){
-                            menu();
+                            menu(contaAtual);
                             int escolhaMenu = input.nextInt();
                             input.nextLine();
 
@@ -286,9 +285,30 @@ public class Main{
 
                                 case 7:
                                     System.out.println("Obrigado por usar nosso banco!");
+                                    pararTodosInvestimentos();
                                     noMenuOperacional = false;
                                     sistemaAtivo = false;
                                     break;
+
+                                case 8:
+                                    if(contaAtual instanceof ContaPoupanca){
+                                        ((ContaPoupanca) contaAtual).iniciarInvestimentos();
+                                        System.out.println("Investimento iniciado!");
+                                    }
+                                    else{
+                                        System.out.println("Essa opção está disponível somente para conta poupança!");
+                                    }
+                                    break;
+                                
+                                case 9:
+                                    if(contaAtual instanceof ContaPoupanca){
+                                        ((ContaPoupanca) contaAtual).pararInvestimentos();
+                                        System.out.println("Investimento parado!");
+                                    }
+                                    else{
+                                        System.out.println("Essa opção está disponível somente para conta poupança!");
+                                    }
+                                    break;                                    
 
                                 default:
                                     System.out.println("Opção inválida!");
@@ -304,6 +324,7 @@ public class Main{
 
                 case 4:
                     System.out.println("Encerrando o programa... Até logo!");
+                    pararTodosInvestimentos();
                     sistemaAtivo = false;
                     break;
 
