@@ -15,11 +15,12 @@ public class Main{
         System.out.println("3. Consultar Saldo");
         System.out.println("4. Fazer recarga");
         System.out.println("5. Fazer transferência");
-        System.out.println("6. Trocar de Conta / Voltar ao Início");
-        System.out.println("7. Sair do Sistema");
+        System.out.println("6. Imprimir Extrato");
+        System.out.println("7. Trocar de Conta / Voltar ao Início");
+        System.out.println("8. Sair do Sistema");
         if(contaAtual instanceof ContaPoupanca){
-            System.out.println("8. Iniciar investimentos");
-            System.out.println("9. Parar investimentos");
+            System.out.println("9. Iniciar investimentos");
+            System.out.println("10. Parar investimentos");
         }
         System.out.print("Escolha uma opção: ");
     }
@@ -233,7 +234,7 @@ public class Main{
                                     break;
 
                                 case 5:
-                                    System.out.println("Escolha uma das contas para fazer a transferência: ");
+                                    System.out.println("\n--- Contas disponíveis para receber a transferência ---");
                                     int numeroDaContaAtual = contaAtual.getNumero();
                                     int indiceContaAtual = -1;
 
@@ -244,17 +245,19 @@ public class Main{
                                             continue;
                                         }
                                         else{
-                                            System.out.println("[" + i + "] Conta Número: " + listaDeContas.get(i).getNumero());
+                                            Conta contaListada = listaDeContas.get(i);
+                                            String tipoContaListada = contaListada instanceof ContaCorrente ? "Conta Corrente" : "Conta Poupança";
+                                            System.out.println("[" + i + "] " + tipoContaListada + " | Conta: " + contaListada.getNumero());
                                         }
                                     }
-                                    System.out.print("Digite o índice da conta que deseja transferir: ");
+                                    System.out.print("Digite o índice da conta de destino: ");
                                     int indice = input.nextInt();
                                     input.nextLine();
 
                                     if(indice >= 0 && indice < listaDeContas.size() && indice != indiceContaAtual){
                                         double valorDeDeposito;
                                         while(true){
-                                            System.out.println("Digite o valor para transferir: ");
+                                            System.out.print("Digite o valor da transferência: R$ ");
                                             valorDeDeposito = input.nextDouble();
 
                                             if(valorDeDeposito <= 0){
@@ -268,9 +271,9 @@ public class Main{
 
                                         Conta contaDestino = listaDeContas.get(indice);
                                         if(contaAtual.transferir(contaDestino, valorDeDeposito)){
-                                            System.out.println("Transferência feita com sucesso!");
+                                            System.out.printf("Transferência de R$ %.2f da conta %d para a conta %d realizada com sucesso.%n", valorDeDeposito, contaAtual.getNumero(), contaDestino.getNumero());
                                         } else {
-                                            System.out.println("Transferência não realizada: valor inválido ou saldo insuficiente!");
+                                            System.out.println("Não foi possível realizar a transferência. Confira o valor e o saldo disponível.");
                                         }
                                     }
                                     else{
@@ -279,18 +282,21 @@ public class Main{
                                     break;
 
                                 case 6:
+                                    contaAtual.imprimirExtrato();
+                                    break;
+                                case 7:
                                     System.out.println("Saindo da conta atual...");
                                     noMenuOperacional = false;
                                     break;
 
-                                case 7:
+                                case 8:
                                     System.out.println("Obrigado por usar nosso banco!");
                                     pararTodosInvestimentos();
                                     noMenuOperacional = false;
                                     sistemaAtivo = false;
                                     break;
 
-                                case 8:
+                                case 9:
                                     if(contaAtual instanceof ContaPoupanca){
                                         ((ContaPoupanca) contaAtual).iniciarInvestimentos();
                                         System.out.println("Investimento iniciado!");
@@ -300,7 +306,7 @@ public class Main{
                                     }
                                     break;
                                 
-                                case 9:
+                                case 10:
                                     if(contaAtual instanceof ContaPoupanca){
                                         ((ContaPoupanca) contaAtual).pararInvestimentos();
                                         System.out.println("Investimento parado!");

@@ -21,7 +21,7 @@ public class ContaPoupanca extends Conta{
             double rendimento = getSaldo() * TAXA_POR_MINUTO;
 
             if(rendimento > 0){
-                depositar(rendimento);
+                aplicarRendimento(rendimento);
             }
         }, 1, 1, TimeUnit.MINUTES);
     }
